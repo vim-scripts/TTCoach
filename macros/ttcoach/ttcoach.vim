@@ -3,7 +3,7 @@
 " Author: Mikolaj Machowski <mikmach@wp.pl>
 " Version: 0.7.1
 " License: GPL v. 2.0 
-" Last Change: wto lis 12 12:00  2002 C
+" Last Change: czw lis 21 06:00  2002 C
 "  
 " Help: 
 " More in separate doc file: |ttcoach.txt|
@@ -13,18 +13,15 @@
 "		Unpack file ttcoach.zip from level of your .vim or vimfiles directory.
 "		It will unpack files:
 "			ttcplug.vim    - into plugin directory
-"			ttcoach.vim    - into macros directory
+"			ttcoach.vim    - into new created macros/ttcoach directory
 "			ttcoach.txt    - into doc directory. Read |add-local-help|
-"			exercise files - into new created ttcoach directory
+"			exercise files - into new created macros/ttcoach directory
 "		}}}	
 " Changelog: {{{
-"	From version 0.6 and 0.7
-"   - now ttcoach.vim is layout independent: layout files are external
-"   - fixed F3 creating always new window
-"   - F3 now also clears typed text
-"   - limit of exercise length is now exceed to 250 lines. 
-"   - Please reinstall help files 
-"   - fixed wrong ttc_plug_en.vim file 
+"	From version 0.7
+"   - added <F1> map to show shortcuts
+"   - Slovak exercises	
+"   - limit of lines up to 500 
 " }}}
 " TODO: {{{
 "   - Better interaction with Vim 
@@ -47,8 +44,10 @@ if g:ttcoach_penalty == "0"
 	let g:ttcoach_penalty = "1m"
 endif
 set hidden
+set noequalalways
 set virtualedit=
 set filetype=
+set tw=0
 if has("gui_running") && g:ttcoach_application_mode != "0"
 	set nonumber
 	set scrolloff=1
@@ -59,184 +58,193 @@ if has("gui_running") && g:ttcoach_application_mode != "0"
 endif
 " }}}
 " Program maps: {{{
+map <silent> <F1> :call <SID>ShortHelp()<cr>
 map <silent> <F2> :call <SID>NewTest()<cr>
 map <silent> <F3> :call <SID>PrepareTest()<cr>
 map <silent> <F4> :call <SID>HiLetter()<cr>
 map <silent> <F5> :call <SID>Statistics()<cr>
-"map <F6> ???
+map <silent> <F6> :TTExplore<cr>
 map <silent> <F7> :call <SID>FlushStatistics()<cr>
 map <silent> <F8> :call <SID>ViewStatistics()<cr>
 map <silent> <F9> :qa!<cr>
-noremap <silent> i :call <SID>TimeStart()<cr>i
-inoremap <silent> <esc> <esc>:call <SID>TimeEnd()<cr>
-inoremap <silent> <c-[> <esc>:call <SID>TimeEnd()<cr>
+noremap <buffer> <silent> i :call <SID>TimeStart()<cr>i
+noremap <buffer> <silent> I :call <SID>TimeStart()<cr>I
+inoremap <buffer> <silent> <esc> <esc>:call <SID>TimeEnd()<cr>
+inoremap <buffer> <silent> <c-[> <esc>:call <SID>TimeEnd()<cr>
 " }}}
 
 " Let's do imaps in keyboard rows: {{{
 " First row {{{
-imap <silent> ~ ~<c-o>:call CompareKeys()<cr>
-imap <silent> ` `<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> ~ ~<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> ` `<c-o>:call CompareKeys()<cr>
 
-imap <silent> ! !<c-o>:call CompareKeys()<cr>
-imap <silent> 1 1<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> ! !<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> 1 1<c-o>:call CompareKeys()<cr>
 
-imap <silent> @ @<c-o>:call CompareKeys()<cr>
-imap <silent> 2 2<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> @ @<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> 2 2<c-o>:call CompareKeys()<cr>
 
-imap <silent> # #<c-o>:call CompareKeys()<cr>
-imap <silent> 3 3<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> # #<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> 3 3<c-o>:call CompareKeys()<cr>
 
-imap <silent> $ $<c-o>:call CompareKeys()<cr>
-imap <silent> 4 4<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> $ $<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> 4 4<c-o>:call CompareKeys()<cr>
 
-imap <silent> % %<c-o>:call CompareKeys()<cr>
-imap <silent> 5 5<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> % %<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> 5 5<c-o>:call CompareKeys()<cr>
 
-imap <silent> ^ ^<c-o>:call CompareKeys()<cr>
-imap <silent> 6 6<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> ^ ^<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> 6 6<c-o>:call CompareKeys()<cr>
 
-imap <silent> & &<c-o>:call CompareKeys()<cr>
-imap <silent> 7 7<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> & &<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> 7 7<c-o>:call CompareKeys()<cr>
 
-imap <silent> * *<c-o>:call CompareKeys()<cr>
-imap <silent> 8 8<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> * *<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> 8 8<c-o>:call CompareKeys()<cr>
 
-imap <silent> ( (<c-o>:call CompareKeys()<cr>
-imap <silent> 9 9<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> ( (<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> 9 9<c-o>:call CompareKeys()<cr>
 
-imap <silent> ) )<c-o>:call CompareKeys()<cr>
-imap <silent> 0 0<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> ) )<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> 0 0<c-o>:call CompareKeys()<cr>
 
-imap <silent> _ _<c-o>:call CompareKeys()<cr>
-imap <silent> - -<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> _ _<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> - -<c-o>:call CompareKeys()<cr>
 
-imap <silent> + +<c-o>:call CompareKeys()<cr>
-imap <silent> = =<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> + +<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> = =<c-o>:call CompareKeys()<cr>
 
-imap <silent> <Bar> <Bar><c-o>:call CompareKeys()<cr>
-imap <silent> \ \<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> <Bar> <Bar><c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> \ \<c-o>:call CompareKeys()<cr>
 " }}}
 " Second Row  {{{
-imap <silent> <Tab> <Tab><c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> <Tab> <Tab><c-o>:call CompareKeys()<cr>
 
-imap <silent> Q Q<c-o>:call CompareKeys()<cr>
-imap <silent> q q<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> Q Q<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> q q<c-o>:call CompareKeys()<cr>
 
-imap <silent> W W<c-o>:call CompareKeys()<cr>
-imap <silent> w w<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> W W<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> w w<c-o>:call CompareKeys()<cr>
 
-imap <silent> E E<c-o>:call CompareKeys()<cr>
-imap <silent> e e<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> E E<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> e e<c-o>:call CompareKeys()<cr>
 
-imap <silent> R R<c-o>:call CompareKeys()<cr>
-imap <silent> r r<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> R R<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> r r<c-o>:call CompareKeys()<cr>
 
-imap <silent> T T<c-o>:call CompareKeys()<cr>
-imap <silent> t t<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> T T<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> t t<c-o>:call CompareKeys()<cr>
 
-imap <silent> Y Y<c-o>:call CompareKeys()<cr>
-imap <silent> y y<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> Y Y<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> y y<c-o>:call CompareKeys()<cr>
 
-imap <silent> U U<c-o>:call CompareKeys()<cr>
-imap <silent> u u<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> U U<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> u u<c-o>:call CompareKeys()<cr>
 
-imap <silent> I I<c-o>:call CompareKeys()<cr>
-imap <silent> i i<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> I I<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> i i<c-o>:call CompareKeys()<cr>
 
-imap <silent> O O<c-o>:call CompareKeys()<cr>
-imap <silent> o o<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> O O<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> o o<c-o>:call CompareKeys()<cr>
 
-imap <silent> P P<c-o>:call CompareKeys()<cr>
-imap <silent> p p<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> P P<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> p p<c-o>:call CompareKeys()<cr>
 
-imap <silent> { {<c-o>:call CompareKeys()<cr>
-imap <silent> [ [<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> { {<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> [ [<c-o>:call CompareKeys()<cr>
 
-imap <silent> } }<c-o>:call CompareKeys()<cr>
-imap <silent> ] ]<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> } }<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> ] ]<c-o>:call CompareKeys()<cr>
 " }}}
 " Third Row {{{
-imap <silent> A A<c-o>:call CompareKeys()<cr>
-imap <silent> a a<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> A A<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> a a<c-o>:call CompareKeys()<cr>
 
-imap <silent> S S<c-o>:call CompareKeys()<cr>
-imap <silent> s s<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> S S<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> s s<c-o>:call CompareKeys()<cr>
 
-imap <silent> D D<c-o>:call CompareKeys()<cr>
-imap <silent> d d<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> D D<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> d d<c-o>:call CompareKeys()<cr>
 
-imap <silent> F F<c-o>:call CompareKeys()<cr>
-imap <silent> f f<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> F F<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> f f<c-o>:call CompareKeys()<cr>
 
-imap <silent> G G<c-o>:call CompareKeys()<cr>
-imap <silent> g g<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> G G<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> g g<c-o>:call CompareKeys()<cr>
 
-imap <silent> H H<c-o>:call CompareKeys()<cr>
-imap <silent> h h<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> H H<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> h h<c-o>:call CompareKeys()<cr>
 
-imap <silent> J J<c-o>:call CompareKeys()<cr>
-imap <silent> j j<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> J J<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> j j<c-o>:call CompareKeys()<cr>
 
-imap <silent> K K<c-o>:call CompareKeys()<cr>
-imap <silent> k k<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> K K<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> k k<c-o>:call CompareKeys()<cr>
 
-imap <silent> L L<c-o>:call CompareKeys()<cr>
-imap <silent> l l<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> L L<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> l l<c-o>:call CompareKeys()<cr>
 
-imap <silent> : :<c-o>:call CompareKeys()<cr>
-imap <silent> ; ;<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> : :<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> ; ;<c-o>:call CompareKeys()<cr>
 
-imap <silent> " "<c-o>:call CompareKeys()<cr>
-imap <silent> ' '<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> " "<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> ' '<c-o>:call CompareKeys()<cr>
 
-imap <silent> <cr> <c-o>:call <SID>ReturnKey()<cr>
+imap <buffer> <silent> <cr> <c-o>:call <SID>ReturnKey()<cr>
 " }}}
 " Fourth Row {{{
-imap <silent> Z Z<c-o>:call CompareKeys()<cr>
-imap <silent> z z<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> Z Z<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> z z<c-o>:call CompareKeys()<cr>
 
-imap <silent> X X<c-o>:call CompareKeys()<cr>
-imap <silent> x x<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> X X<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> x x<c-o>:call CompareKeys()<cr>
 
-imap <silent> C C<c-o>:call CompareKeys()<cr>
-imap <silent> c c<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> C C<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> c c<c-o>:call CompareKeys()<cr>
 
-imap <silent> V V<c-o>:call CompareKeys()<cr>
-imap <silent> v v<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> V V<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> v v<c-o>:call CompareKeys()<cr>
 
-imap <silent> B B<c-o>:call CompareKeys()<cr>
-imap <silent> b b<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> B B<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> b b<c-o>:call CompareKeys()<cr>
 
-imap <silent> N N<c-o>:call CompareKeys()<cr>
-imap <silent> n n<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> N N<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> n n<c-o>:call CompareKeys()<cr>
 
-imap <silent> M M<c-o>:call CompareKeys()<cr>
-imap <silent> m m<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> M M<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> m m<c-o>:call CompareKeys()<cr>
 
-imap <silent> < <<c-o>:call CompareKeys()<cr>
-imap <silent> , ,<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> < <<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> , ,<c-o>:call CompareKeys()<cr>
 
-imap <silent> > ><c-o>:call CompareKeys()<cr>
-imap <silent> . .<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> > ><c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> . .<c-o>:call CompareKeys()<cr>
 
-imap <silent> ? ?<c-o>:call CompareKeys()<cr>
-imap <silent> / /<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> ? ?<c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> / /<c-o>:call CompareKeys()<cr>
 " }}}
 
  
-imap <silent> <Space> <Space><c-o>:call CompareKeys()<cr>
+imap <buffer> <silent> <Space> <Space><c-o>:call CompareKeys()<cr>
 " }}}
 
 " Source files with definitions of different layouts
-exe "source ".g:ttcoach_dir."ttcoach/ttc_plug_".g:ttcoach_layout.".vim"
+exe 'source '.g:ttcoach_dir.'ttc_plug_'.g:ttcoach_layout.'.vim'
 
+function! s:ShortHelp() " {{{
+" Shows help screen
+	exe 'normal :above split '.g:ttcoach_dir.'short_help.vim'."\<cr>11\<C-W>_gg"
+endfunction " }}}
 function! s:PrepareTest() " {{{
 " Add keyboard layout to the file, split window and place cursor in start
 " position
+	if winnr() == 2
+	   only
+    endif	   
 	if winbufnr(2) == -1
 		let underline = 510 - line('$')
 		exe "normal G".underline."o\<esc>G"
-		exe 'read '.g:ttcoach_dir.'ttcoach/ttcoach_layout_'.g:ttcoach_layout
+		exe 'read '.g:ttcoach_dir.'ttcoach_layout_'.g:ttcoach_layout
 		split
 		exe "normal \<c-w>j5\<c-w>_G\<c-w>k"
 	endif
@@ -253,6 +261,9 @@ function! s:PrepareTest() " {{{
 endfunction " }}}
 function! s:NewTest()     " {{{
 " Cleans typed letters and place cursor in start position
+	if winnr() == 2
+	   only
+    endif	   
 	exe "normal :silent 2,$v/[]÷]$/s/.*//\<cr>"
 	normal! 3G
 	let s:fault_number = "0"
@@ -404,16 +415,20 @@ function! s:Statistics()  " {{{
 endfunction " }}}
 function! s:ViewStatistics() " {{{
 " Obvious
+if !exists("s:register")
+	echomsg "You didn't create statistics for this session. Press <F5>"
+else
 	exe "view ".s:stats_file
 	silent only
 	normal G
+endif
 endfunction " }}}
 function! s:FlushStatistics() " {{{
 " Writes statistics to stats.dat
 if !exists("s:register")
 	echomsg "You didn't create statistics for this session. Press <F5>"
 else
-	let s:stats_file = g:ttcoach_dir.'ttcoach/'.g:ttcoach_exe_dir.'/stats.dat'
+	let s:stats_file = g:ttcoach_dir.'/'.g:ttcoach_exe_dir.'/stats.dat'
 	let g:stats_file = s:stats_file
 	exe 'silent !echo "Date: '.strftime("%c").'" >> '.s:stats_file
 	exe 'silent !echo "Lesson: '.expand("%:t").'" >> '.s:stats_file
@@ -454,6 +469,9 @@ endfunction " }}}
 function! s:ColKey(current_key) " {{{
 " Highlights key on keyboard scheme
 	syntax clear ttCurrent
+	" PVx patch: clear highlight for dead keys and 'double' keys
+	syntax clear ttDead
+	syntax clear ttDouble
 
 	let curr_key = ExtLayout(a:current_key)
 
@@ -477,6 +495,9 @@ hi def link ttText     Type
 hi def link ttKeys     Comment
 hi def link ttBorder   Statement
 hi def link ttCurrent  Error 
+" PVx patch: highlight for dead and double keys
+hi def link ttDead     Search 
+hi def link ttDouble   Visual 
 " }}}
  
 " vim:fdm=marker:ts=4:sw=4:noet

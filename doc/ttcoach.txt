@@ -29,7 +29,7 @@ provides possibility to do this and offers simple statistics.
 Unpack file ttcoach.zip from level of your .vim or vimfiles directory.
 It will unpack files:
     ttcplug.vim      - into plugin directory
-    ttcoach.vim      - into macros directory
+    ttcoach.vim      - into new created macros/ttcoach directory
     ttcoach.txt      - into doc directory
     keyboard layouts - into new created macros/ttcoach directory
     layouts defs     - into macros/ttcoach directory
@@ -44,7 +44,7 @@ TTCPLUG.VIM
 
 For proper work on non-*nix systems and use non English keyboard layout you 
 have to modify some variables in file plugin/ttcplug.vim |ttcoach-variables|.
-Or set up them in your vimrc file.
+Or set up them in your |vimrc| file.
 
 ==============================================================================
 2. Theory of touch typing 			*ttcoach-theory*
@@ -76,7 +76,11 @@ KEYBOARD LAYOUT (qwerty)			*ttcoach-keyboard*
 
 START 						*ttcoach-start*
 
-After opening Vim you can use command ":TTExplore". It will open standard Vim
+Command ":TTCoach" will split screen in two parts. On top will be list of 
+keyboard shortcuts used in TTCoach, bottow will be Explorer window with 
+exercises to choose.
+
+You can also use command ":TTExplore". It will open standard Vim
 file explorer in directory with exercise files proper for |g:ttcoach_layout|.
 More help about explorer here: |pi_expl.txt|.
 
@@ -85,12 +89,14 @@ Choose one of files. It will open with proper syntax highlighting.
 TYPING 						*ttcoach-typing*
 
 If you want to see keyboard with highlighted current keys press "<F3>", if you
-don't want to have hints press "<F2>".
+don't want to hints press "<F2>". It will prepare test (zero statistics, time,
+close help window).
 	Both keys place cursor under first letter of test. To start typing
-press "i" (not "I"). It also starts timer. The end of line is marked with "÷".
+press "i" or "I". It also starts timer. The end of line is marked with "÷".
 When cursor is under this character press "CR" to go to next line (in fact two
-lines down). After each fault you get 0,5 s penalty. More about it
-|g:ttcoach_penalty|. End typing with "<Esc>" or "<C-[>". It also ends timer.
+lines down). After each fault you get 0,5 s penalty. You can adjust it - more
+about it |g:ttcoach_penalty|. End typing with "<Esc>" or "<C-[>". It also ends
+timer.
 	If you want to start exercise not from first line go to desired
 position and press "<F4>". It will highlight corresponding key on keyboard.
 You can start only from first character in line.
@@ -147,19 +153,34 @@ ttcoach.vim clears all imap and iab commands and resets some options
 ==============================================================================
 4. Commands 					*ttcoach-commands*
 						*:TTExplore*
+:TTExprore [{la}]
+		There is only one command ":TTExplore". It opens file explorer
+		window with exercise files in directory according to value of
+		|g:ttcoach_layout|. If you want exercise another layout use
+		eg: ":TTExplore de". But physical keyboard layout you have to
+		change outside Vim (eg. in Mandrake Control Center). In some
+		cases you have also change font. Special argumenst are
+		"custom" for viewing custom created files and "vim" for
+		exercizes with Vim commands.
 
-There is only one command ":TTExplore". It opens file explorer window with
-exercise files in directory according to value of |g:ttcoach_layout|. If you
-want exercise another layout use eg: ":TTExplore de". But physical keyboard
-layout you have to change outside Vim (eg. in Mandrake Control Center). In 
-some cases you have also change font. Special argumenst are "custom" for 
-viewing custom created files and "vim" for exercizes with Vim commands.
+		But eg. German letters even in not in your "official" layout
+		can be entered with digraphs.
 
-But eg. German letters even in not in your "official" layout can be entered 
-with digraphs.
+						*:TTCoach*
+:TTCoach [{la}]
+		It will open new session of TTCoach with screen split in two
+		parts. On top short help, bottom will be Explorer. Also here
+		you can use session type shortcuts (language, vim, custom)
 
+						*:TTCustom*
+:TTCustom {filename}
+		Open custom file prepared for training. Add empty lines, line
+		endings etc.
 ==============================================================================
 5. Mappings 					*ttcoach-mappings*
+
+						*ttcoach-F1*
+<F1>		Show short help about shortcuts.
 
 <F2>						*ttcoach-F2*
 		Removes typed letters and places cursor at start position (3rd
@@ -208,10 +229,10 @@ From version 0.5 variables can be set in your vimrc file.
 						*g:ttcoach_layout*
 Default value is "en". This variable is responsible for attaching keyboard
 layout to exercise file and turning on proper imaps and keys highlighting.
-Possible values: en, fr, de, pl.
+Possible values: en, fr, de, pl, sk.
 
 						*g:ttcoach_dir*
-Default value "~/.vim/macros/". Root directory for TTCoach files. For
+Default value "~/.vim/macros/ttcoach". Root directory for TTCoach files. For
 MS-Windows it should be something like: "f:\vim\vimfiles\macros\".
 
 						*g:ttcoach_application_mode*
@@ -248,7 +269,7 @@ define up to three letters).  You can practise with this file entering to Vim
 and with command ":TTExplore custom".  Your keyboard layout will be saved, 
 alas you can not combine eg. ":TTExplore de vim".
 
-Names of files shoul be meaningful. For example: 09pq.ttc - 09 level of 
+Names of files should be meaningful. For example: 09pq.ttc - 09 level of 
 exercise (and help for systems where case of letters doesn't matter); pq - 
 these letters sponsors exercise; .ttc - information for autocommand from 
 ttcplug.vim .
