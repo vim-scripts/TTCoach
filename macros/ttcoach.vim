@@ -1,9 +1,9 @@
 " Vim plugin for training touch typing.
 " (c) Mikolaj Machowski 2002 
 " Author: Mikolaj Machowski <mikmach@wp.pl>
-" Version: 0.7
+" Version: 0.7.1
 " License: GPL v. 2.0 
-" Last Change: wto lis 12 11:00  2002 C
+" Last Change: wto lis 12 12:00  2002 C
 "  
 " Help: 
 " More in separate doc file: |ttcoach.txt|
@@ -18,12 +18,13 @@
 "			exercise files - into new created ttcoach directory
 "		}}}	
 " Changelog: {{{
-"	From version 0.6
+"	From version 0.6 and 0.7
 "   - now ttcoach.vim is layout independent: layout files are external
 "   - fixed F3 creating always new window
 "   - F3 now also clears typed text
 "   - limit of exercise length is now exceed to 250 lines. 
 "   - Please reinstall help files 
+"   - fixed wrong ttc_plug_en.vim file 
 " }}}
 " TODO: {{{
 "   - Better interaction with Vim 
