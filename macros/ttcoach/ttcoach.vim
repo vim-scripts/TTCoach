@@ -3,7 +3,7 @@
 " Author: Mikolaj Machowski (mikmach AT wp DOT pl)
 " Version: 1.0
 " License: GPL v. 2.0
-" Last change: sat jan 31 20:00  2004 C
+" Last change: sun feb 1 12:00  2004 C
 "  
 " Help: 
 " More in separate doc file: |ttcoach.txt|
@@ -19,12 +19,12 @@
 "		}}}	
 " Changelog: {{{
 "   From version 0.9.1
-"    - goals system
 "    - highlight bugs, not ":sleep"
+"    - goals system
 "    - two new exercise files with Vim exercises: colon and sqbrackets
 "    - fixed bug with multiple keyboards attached 
 "    - many small bugfixes 
-"    - Show only ttc files in Explorer
+"    - Show only ttc files in Explorer commands
 "    - Save statistics always with generation - it will free one F-key
 "    - Add ! to all :normal commands
 "    - TTCustom works on copies, not original files. Shi^W:wq happens
@@ -61,6 +61,7 @@ set noequalalways
 set virtualedit=
 set filetype=
 set tw=0
+set laststatus=2
 " Indentation ...
 set indentkeys=
 set cinkeys=
@@ -100,6 +101,11 @@ inoremap <buffer> <silent> <c-[> <esc>:call TimeEnd()<CR>
 nmap o <Nop>
 nmap O <Nop>
 nmap d <Nop>
+" }}}
+" Make sure no keyboard exists and TTCoach know about that {{{
+if line('$') !~ '[\s*space\s*]'
+   unlet! g:is_keyboard
+endif   
 " }}}
 " Set statusline {{{
 set statusline =
@@ -278,6 +284,8 @@ imap <buffer> <silent> <Space> <Space><c-o>:call CompareKeys()<cr>
 " Source files with definitions of different layouts
 exe 'source '.g:ttcoach_dir.'ttc_plug_'.g:ttcoach_layout.'.vim'
 
+" Had to be in if to evade redefining when resourcing
+if !exists("*NextExercise")
 " ShortHelp: Show and close help screen {{{
 function! ShortHelp()
 	if bufwinnr('short_help') != -1
@@ -331,8 +339,11 @@ function! NewTest()
     elseif expand("%") =~ 'short_help'
 		quit
     endif	   
-	silent exe "normal! :2,$v/÷$/s/.*//\<cr>"
-	silent exe "normal! :2,$v/^[/s/.*//\<cr>"
+	if exists("g:is_keyboard")
+		silent exe "normal! :2,$-5v/[]÷]$/s/.*//\<cr>"
+	else
+		silent exe "normal! :2,$v/[]÷]$/s/.*//\<cr>"
+	endif
 	normal! 3G
 	call ClearVariables()
 	let first_key = getline(2)[0]
@@ -431,9 +442,6 @@ function! StatsPercent(percent)
 	"let percent = substitute(percent, '\(.*\)\(..\)$', '\1.\2', '')
 	return percent
 endfunction " }}}
-
-" Had to be in if to evade redefining when resourcing
-if !exists("*NextExercise")
 	" NextExercise: Move to the next exercise if results are good. {{{
 	function! NextExercise()
 		let curr_exercise = expand("%:t") 
@@ -680,7 +688,7 @@ endif
 " Custom
 " ===========================================================================
 " TTCustomSave: Save custom created file in custom subdir of ttcoach {{{ 
- command -nargs=0 TTCustomSave :silent call Tcustomsave()<cr>
+command! -nargs=0 TTCustomSave :silent call Tcustomsave()<cr>
 
 function! Tcustomsave()
 	silent exe "normal! :2,$v/÷$/s/.*//\<cr>"

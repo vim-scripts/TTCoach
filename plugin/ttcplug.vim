@@ -1,7 +1,7 @@
 " Plugin part of TTCoach
 " (c) Mikolaj Machowski 2002-2004
 " Author: Mikolaj Machowski <mikmach@wp.pl>
-" Last Change: sat jan 31 20:00  2004 C
+" Last Change: sun feb 1 12:00  2004 C
 " Version: the same as ttcoach.vim
 " License: GPL v. 2.0
 " Help: In doc/ttcoach.txt
@@ -50,8 +50,8 @@ if !exists("g:ttc_target_accuracy")
 	let g:ttc_target_accuracy = 98
 endif
 
-" This line if for *nix. users of other systems should modify it.
-exe 'au BufRead,BufEnter '.g:ttcoach_dir."*.ttc :source ".g:ttcoach_dir.'ttcoach.vim | '.
+" This line very generous, can cause problems in future.
+exe 'au BufRead,BufEnter *.ttc :source '.g:ttcoach_dir.'ttcoach.vim | '.
 	\ " if bufwinnr('short_help') != -1 | :bwipeout short_help | endif"
 
 " =============================================================================
@@ -105,10 +105,11 @@ function! Texplore(...)
 	" Hide .dat files in Explorer
 	if !exists("g:explHideFiles")
 		let g:explHideFiles = "*.dat"
-	else
+	elseif exists("g:explHideFiles") && g:explHideFiles !~ "dat"
 		let g:explHideFiles = g:explHideFiles . " *.dat"
 	endif
-	exe 'Explore '.g:ttcoach_dir.'/'.g:ttcoach_exe_dir
+	exe 'Explore '.g:ttcoach_dir.g:ttcoach_exe_dir
+
 	exe 'map <F1> normal! :above split '.g:ttcoach_dir.'short_help.vim'."\<cr>12\<C-W>_gg"
 	set statusline=%t%=F9-Quit
 	map <F9> :qa!<CR>
