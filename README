@@ -1,0 +1,6 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=461
+
+Detailed help in ttcoach.txt.
+Install :help add-local-help
+
+This plugin is very similar to to other touch type training programs and provide simple statistics (chars per minute, time, faults, faults per key and finger)

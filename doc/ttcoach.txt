@@ -1,0 +1,269 @@
+*ttcoach.txt*	TTCoach         Last Change: wto lis 12 11:00  2002 C
+
+
+				   TTCoach
+
+			  (c) Mikolaj Machowski 2002
+			       <mikmach@wp.pl>
+				  GPL v. 2.0
+
+Most of Vim users are excellent touch typers but for beginners and even
+intermediate users it is important to train their skills. TTCoach
+provides possibility to do this and offers simple statistics.
+
+1. Installation 		|ttcoach-installation|
+2. Theory of touch typing 	|ttcoach-theory|
+3. How to use 			|ttcoach-manual|
+    start 			    |ttcoach-start|
+    typing 			    |ttcoach-typing|
+    statistics 			    |ttcoach-statistics|
+    caveats 			    |ttcoach-caveats|
+4. Commands 			|ttcoach-commands|
+5. Mappings 			|ttcoach-mappings|
+6. Variables 			|ttcoach-variables|
+7. Exercise files 		|ttcoach-exercise|
+
+==============================================================================
+1. Installation					*ttcoach-installation*
+
+Unpack file ttcoach.zip from level of your .vim or vimfiles directory.
+It will unpack files:
+    ttcplug.vim      - into plugin directory
+    ttcoach.vim      - into macros directory
+    ttcoach.txt      - into doc directory
+    keyboard layouts - into new created macros/ttcoach directory
+    layouts defs     - into macros/ttcoach directory
+    exercise files   - into new created directories:
+		       macros/ttcoach/en,fr,de,pl,finger,custom,vim 
+
+Not messing with this structure is important for use TTCoach out-of-the-box
+(at least on *nix systems).
+To install doc file (this file) follow instructions in |add-local-help|.
+
+TTCPLUG.VIM
+
+For proper work on non-*nix systems and use non English keyboard layout you 
+have to modify some variables in file plugin/ttcplug.vim |ttcoach-variables|.
+Or set up them in your vimrc file.
+
+==============================================================================
+2. Theory of touch typing 			*ttcoach-theory*
+
+
+1. Keep your fingers on home-row [asdf-hjkl;].
+2. After each keystroke come back to home-row position.
+3. Don't move to next lesson until your accuracy is below 98%.
+4. Accuracy is much more important than speed.
+
+KEYBOARD LAYOUT (qwerty)			*ttcoach-keyboard*
+
+|	Border between fingers
+||	Border between two hands
+
+		Left hand 			Right hand
+  little     ring  middle index      index   middle  ring     little
+------------ ----- ----- --------   --------- ----- ----- -----------------
+[`] [1] [2] | [3] | [4] | [5] [6] || [7] [8] | [9] | [0] | [-] [=] [\] [BS]
+[tab ] [q] | [w] | [e] | [r] [t] || [y] [u] | [i] | [o] | [p] [[] []]
+[ctrll] [a] | [s] | [d] | [f] [g] || [h] [j] | [k] | [l] | [;] ['] [CR]
+[shiftl] [z] | [x] | [c] | [v] [b] || [n] [m] | [,] | [.] | [/] [shiftr]
+[caps]  [altl ]  [               space               ]  [ altr]  [ctrlr]
+-----------------------------------  -----------------------------------
+           left thumb              ||           right thumb
+
+==============================================================================
+3. How to use					*ttcoach-manual*
+
+START 						*ttcoach-start*
+
+After opening Vim you can use command ":TTExplore". It will open standard Vim
+file explorer in directory with exercise files proper for |g:ttcoach_layout|.
+More help about explorer here: |pi_expl.txt|.
+
+Choose one of files. It will open with proper syntax highlighting.
+
+TYPING 						*ttcoach-typing*
+
+If you want to see keyboard with highlighted current keys press "<F3>", if you
+don't want to have hints press "<F2>".
+	Both keys place cursor under first letter of test. To start typing
+press "i" (not "I"). It also starts timer. The end of line is marked with "÷".
+When cursor is under this character press "CR" to go to next line (in fact two
+lines down). After each fault you get 0,5 s penalty. More about it
+|g:ttcoach_penalty|. End typing with "<Esc>" or "<C-[>". It also ends timer.
+	If you want to start exercise not from first line go to desired
+position and press "<F4>". It will highlight corresponding key on keyboard.
+You can start only from first character in line.
+
+STATISTICS 					*ttcoach-statistics*
+
+Now, you can see your statistics with "<F5>" (number of typed keys, number of
+faults, time, characters per minute, faults per letter, faults per finger). 
+After long test table can be huge:
+
+Number of keystrokes:   1371
+Number of faults:       25
+Accuracy:               98%
+Time:                   311s
+Characters per minute:  264
+---- Faults per letter -----
+    e:          3       11%
+    s:          5       19%
+    f:          1       3%
+    p:          1       3%
+    a:          2       7%
+    n:          2       7%
+    i:          1       3%
+    t:          3       11%
+    d:          1       3%
+    u:          1       3%
+    o:          1       3%
+    l:          1       3%
+    r:          1       3%
+    y:          1       3%
+     :          1       3%   <- fault with space
+---- Faults per finger -----
+L. pinky:       2       7%
+Left ring:      5       19%
+Left middle:    4       15%
+Left index:     5       19%
+Thumbs:         1       3%
+Right index:    4       15%
+Right middle:   1       3%
+Right ring:     2       7%
+R. pinky:       1       3%
+
+If you want to save statistics press "<F7>". It will add this table to file
+stats.dat in your current language directory with information about lesson and
+date. All statistics you can see with "<F8>". End exercise with "<F9>".
+
+CAVEATS 					*ttcoach-caveats*
+
+It is recommended to start separate session for use TTCoach because
+ttcoach.vim clears all imap and iab commands and resets some options
+(eg. 'virtualedit').
+	It can also resize Gvim window |g:ttcoach_application_mode|.
+
+==============================================================================
+4. Commands 					*ttcoach-commands*
+						*:TTExplore*
+
+There is only one command ":TTExplore". It opens file explorer window with
+exercise files in directory according to value of |g:ttcoach_layout|. If you
+want exercise another layout use eg: ":TTExplore de". But physical keyboard
+layout you have to change outside Vim (eg. in Mandrake Control Center). In 
+some cases you have also change font. Special argumenst are "custom" for 
+viewing custom created files and "vim" for exercizes with Vim commands.
+
+But eg. German letters even in not in your "official" layout can be entered 
+with digraphs.
+
+==============================================================================
+5. Mappings 					*ttcoach-mappings*
+
+<F2>						*ttcoach-F2*
+		Removes typed letters and places cursor at start position (3rd
+		line, 1st column).
+
+<F3>						*ttcoach-F3*
+		Prepares file for lesson with view of keyboard. Adds proper
+		keyboard layout (depending on value of |g:ttcouch_layout|).
+		Splits window on two parts.  In upper is text of exercise.
+		Below is keyboard layout. Current characters will be
+		highlighted. You can also start new exercise with this key.
+
+<F4>						*ttcoach-F4*
+		Sometimes you want to start typing not from the beginning.
+		Moving the cursor is easy. <F5> will highlight proper key on
+		keyboard.
+		Note you can start typing only from first character of the
+		line.
+
+<F5>						*ttcoach-F5*
+		Statistics. You will see number of typed keys, number of
+		faults. accuracy in percents, time, speed (characters per
+		minute) and number of faults per key and finger. Statistics
+		will be zeroed after <F2> command.
+
+<F6> 						*ttcoach-F6*
+		Empty.
+
+<F7> 						*ttcoach-F7*
+		Flush statistics to file. There are all points you saw after
+		pressing <F5> plus date and name of the lesson. All records
+		are added to file stats.dat in your language directory.
+
+<F8> 						*ttcoach-F8*
+		View statistics. Command opens file with statistics and places
+		cursor at the end of file.
+
+<F9>						*ttcoach-F9*
+		End exercise. The same effect as :qa!.
+
+==============================================================================
+6. Variables 					*ttcoach-variables*
+
+From version 0.5 variables can be set in your vimrc file.
+
+						*g:ttcoach_layout*
+Default value is "en". This variable is responsible for attaching keyboard
+layout to exercise file and turning on proper imaps and keys highlighting.
+Possible values: en, fr, de, pl.
+
+						*g:ttcoach_dir*
+Default value "~/.vim/macros/". Root directory for TTCoach files. For
+MS-Windows it should be something like: "f:\vim\vimfiles\macros\".
+
+						*g:ttcoach_application_mode*
+Commented by default. If you use gvim. application_mode will resize gvim
+window to 11 lines, 80 columns. Thus keyboard will be just under typed text.
+Another reason to run TTCoach as separate session. Use with care.
+
+						*g:ttcoach_penalty*
+Default 500 miliseconds. Length of penalty after fault. If you want another
+value read before changing this: |:sleep|.
+
+==============================================================================
+7. Excercise files 				*ttcoach-exercise*
+
+TTCoach has exercise files for English-qwerty, German-qwertz and French-azerty
+keyboards. They are coming from Ktouch <http://edu.kde.org/ktouch> and were
+created by author of this program Haavard Froeiland
+<haavard@users.sourceforge.net>. Thus now TTCoach is GPL.
+
+I have created also exercise files for Polish letters. They are also special 
+files for Vim lovers :) Call ":TTExplore vim". Explorer will open with files 
+ex1.ttc, ex2.ttc (ex commands aka command-line commands, also for use in Vim 
+scripts), nv.ttc (commands of normal and visual mode).
+
+You can alos create your own custom files with ttcustom.pl. This is a perl 
+script for extracting words from file and writing them in TTCoach format to 
+file: >
+
+    ttcustom.pl ~/.vim/CVIMSYN/engspchk.dict a y i > custom/ayi.ttc
+
+This command will extract from engspchk dictionary (or other HUGE file) 100 
+words, each of them contains letters 'a' and 'y' and 'i' (it is possible to 
+define up to three letters).  You can practise with this file entering to Vim 
+and with command ":TTExplore custom".  Your keyboard layout will be saved, 
+alas you can not combine eg. ":TTExplore de vim".
+
+Names of files shoul be meaningful. For example: 09pq.ttc - 09 level of 
+exercise (and help for systems where case of letters doesn't matter); pq - 
+these letters sponsors exercise; .ttc - information for autocommand from 
+ttcplug.vim .
+
+SYNTAX 						*ttcoach-syntax*
+
+Syntax of exercise files is very simple:
+	First line is header (re: /^".*"$/)
+	Next lines are lines to rewrite (re: /.*÷$/)
+
+Both parts are obligatory.
+
+Exercise file can not be longer than 505 lines. This means up to 250 lines for
+exercise and circa 5000 chars to type. If this is not enough for you let me
+know.
+
+==============================================================================
+ vim:tw=78:fo=tcq2:isk=!-~,^*,^\|,^\":ts=8:ft=help:norl:

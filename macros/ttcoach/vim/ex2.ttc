@@ -1,0 +1,47 @@
+" Ex commands (aka colon commands) part 2 "
+first confirm echohl delcommand while vglobal tearoff = pop÷
+
+normal match join command chdir brewind arglocal stag÷
+
+setlocal sNext pyfile iabbrev fixdel echomsg delfunction÷
+
+winsize version tfirst > ppop number menu jumps imap÷
+
+comclear checkpath break argument startinsert sfind÷
+
+sargument quit foldopen iabclear fold echon display wincmd÷
+
+endif verbose tjump inoremenu @ preserve nunmap messages÷
+
+k diffput compiler checktime browse ascii stjump sfirst sall÷
+
+quitall if foldclose wq else diffupdate winpos vertical÷
+
+tlast clast @@ vmap previous nunmenu mkexrc list continue÷
+
+clist topleft buffers autocmd stselect shell saveas qall÷
+
+ijump folddoopen elseif diffget X wnext visual tmenu Next÷
+
+promptfind open mksession last ptag omapclear mkview lcd÷
+
+bunload cprevious cmap change buffer silent augroup sball÷
+
+redo imapclear sunhide function endfunction diffsplit wqall÷
+
+vmapclear tprevious sview append simalt ptNext omenu mode÷
+
+lchdir cquit cmapclear sbuffer cNext bNext sleep sbfirst÷
+
+redir read imenu global endwhile digraphs wviminfo vmenu÷
+
+trewind swapname abbreviate only next left crewind cmenu÷
+
+cabbrev ball slast sblast redraw inoremap goto enew djump÷
+
+xit vnoremap tselect syntax abclear onoremap new nmap let÷
+
+ilist cscope cnext cabclear badd smagic sbmodified registers÷
+
+ptjump folddoclosed÷
+

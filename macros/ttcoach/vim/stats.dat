@@ -1,0 +1,111 @@
+ vim:nomodifiable:ft=help:
+======================================
+Date: sob 09 lis 2002 02:23:19 CET
+Lesson: ex1.ttc
+Number of keystrokes: 259
+Number of faults: 4
+Accuracy: 98.45%
+Time: 61 s
+Characters per minute: 254
+---- Faults per letter -----
+  n:  1    25%
+  o:  1    25%
+  w:  2    50%
+---- Faults per finger -----
+L. pinky: 0  0%
+Left ring: 2  50%
+Left middle: 0  0%
+Thumbs:  0  0%
+Right index: 1  25%
+Right middle: 0  0%
+Right ring: 1  25%
+R. pinky: 0  0%
+======================================
+Date: sob 09 lis 2002 02:28:42 CET
+Lesson: ex2.ttc
+Number of keystrokes: 330
+Number of faults: 7
+Accuracy: 97.87%
+Time: 87 s
+Characters per minute: 227
+---- Faults per letter -----
+  w:  1    14%
+  r:  1    14%
+  a:  2    28%
+  f:  1    14%
+  t:  1    14%
+   :  1    14%
+---- Faults per finger -----
+L. pinky: 2  28%
+Left ring: 1  14%
+Left middle: 0  0%
+Thumbs:  1  14%
+Right index: 0  0%
+Right middle: 0  0%
+Right ring: 0  0%
+R. pinky: 0  0%
+======================================
+Date: Sat Nov  9 02:33:28 2002
+Lesson: nv.ttc
+Number of keystrokes: 58
+Number of faults: 2
+Accuracy: 96.55%
+Time: 25 s
+Characters per minute: 139
+---- Faults per letter -----
+  2:  1    50%
+---- Faults per finger -----
+L. pinky: 1  50%
+Left ring: 0  0%
+Left middle: 0  0%
+Thumbs:  0  0%
+Right index: 0  0%
+Right middle: 0  0%
+Right ring: 1  50%
+R. pinky: 0  0%
+======================================
+Date: Sat Nov  9 17:05:49 2002
+Lesson: ex2.ttc
+Number of keystrokes: 105
+Number of faults: 5
+Accuracy: 95.23%
+Time: 28 s
+Characters per minute: 225
+---- Faults per letter -----
+  t:  2    40%
+  m:  1    20%
+  p:  2    40%
+---- Faults per finger -----
+L. pinky: 0  0%
+Left ring: 0  0%
+Left middle: 0  0%
+Thumbs:  0  0%
+Right index: 1  20%
+Right middle: 0  0%
+Right ring: 0  0%
+R. pinky: 2  40%
+======================================
+Date: Sat Nov  9 17:12:34 2002
+Lesson: ex2.ttc
+Number of keystrokes: 368
+Number of faults: 7
+Accuracy: 98.09%
+Time: 94 s
+Characters per minute: 234
+---- Faults per letter -----
+  N:  1    14%
+  u:  1    14%
+  ÷:  1    14%
+  n:  1    14%
+  o:  1    14%
+  g:  2    28%
+---- Faults per finger -----
+L. pinky: 0  0%
+Left ring: 0  0%
+Left middle: 0  0%
+Thumbs:  0  0%
+Right index: 3  42%
+Right middle: 0  0%
+Right ring: 1  14%
+R. pinky: 0  0%
+======================================

@@ -1,0 +1,45 @@
+" Ex commands (aka colon commands) "
+inoreabbrev grep ex dlist xall vnew tunmenu emenu syncbind÷
+
+all onoremenu nmapclear ls diffpatch cstag cnewer call÷
+
+bdelete snext sbnext resize ptlast gui execute wprevious÷
+
+doautocmd yank vnoremenu undo t amenu view options nmenu÷
+
+loadview cunmap cnfile cc tnext behave sniff sbprevious÷
+
+retab ptnext gvim exit doautoall Print z vsplit unabbreviate÷
+
+tNext anoremenu ! ounmap nnoremap move intro cunabbrev÷
+
+cnoremap cclose bfirst snomagic sbrewind return ptprevious÷
+
+help file dsearch ~ vunmap unhide tag args !! promptrepl÷
+
+ounmenu nnoremenu mark isearch omap cnoreabbrev cd blast÷
+
+source scriptnames rewind ptrewind mkvimrc helpfind files÷
+
+dsplit cunmenu vunmenu unlet tags argadd language # print÷
+
+noremap make isplit cnoremenu center bmodified split scscope÷
+
+right ptselect highlight filetype edit cwindow write unmap÷
+
+tcl argdelete & pclose nohlsearch map iunmap copy cfile÷
+
+bnext sprevious set runtime copen put hide find echo delete÷
+
+close wNext unmenu tcldo argdo * perl noreabbrev mapclear÷
+
+bwipeout iunabbrev colder cfirst botright srewind÷
+
+setfiletype aunmenu rviminfo pwd suspend history finish÷
+
+echoerr debug wall update tclfile < sign perldo noremenu÷
+
+marks iunmenu ptfirst colorscheme sbNext cgetfile bprevious÷
+
+argglobal stop setglobal substitute python recover insert÷
+
