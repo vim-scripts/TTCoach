@@ -1,10 +1,10 @@
-*ttcoach.txt*	TTCoach         Last Change: wto lis 12 11:00  2002 C
+*ttcoach.txt*	TTCoach         Last Change: sro paz 8 11:00  2003 C
 
 
 				   TTCoach
 
-			  (c) Mikolaj Machowski 2002
-			       <mikmach@wp.pl>
+		       (c) Mikolaj Machowski 2002-2003
+			    (mikmach AT wp DOT pl)
 				  GPL v. 2.0
 
 Most of Vim users are excellent touch typers but for beginners and even
@@ -15,6 +15,7 @@ provides possibility to do this and offers simple statistics.
 2. Theory of touch typing 	|ttcoach-theory|
 3. How to use 			|ttcoach-manual|
     start 			    |ttcoach-start|
+    statusline 			    |ttcoach-statusline|
     typing 			    |ttcoach-typing|
     statistics 			    |ttcoach-statistics|
     caveats 			    |ttcoach-caveats|
@@ -98,20 +99,28 @@ lines down). After each fault you get 0,5 s penalty. You can adjust it - more
 about it |g:ttcoach_penalty|. End typing with "<Esc>" or "<C-[>". It also ends
 timer.
 	If you want to start exercise not from first line go to desired
-position and press "<F4>". It will highlight corresponding key on keyboard.
-You can start only from first character in line.
+position and press "<F4>", i or I. It will highlight corresponding key on
+keyboard. You can start only from first character in line.
+
+
+STATUSLINE 					*ttcoach-statusline*
+
+Statusline offers some information about current exercise: name of the layout,
+name of exercise, current accuracy. Also presents the most necessary shortcuts
+<F1>, <F3>, <F5> and <F9>.
 
 STATISTICS 					*ttcoach-statistics*
 
 Now, you can see your statistics with "<F5>" (number of typed keys, number of
-faults, time, characters per minute, faults per letter, faults per finger). 
-After long test table can be huge:
+faults, time, characters per minute, words per minute, faults per letter,
+faults per finger). After long test table can be huge:
 
 Number of keystrokes:   1371
 Number of faults:       25
 Accuracy:               98%
 Time:                   311s
 Characters per minute:  264
+Words per minute:       45
 ---- Faults per letter -----
     e:          3       11%
     s:          5       19%

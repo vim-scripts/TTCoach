@@ -69,6 +69,7 @@ endfunction
 
 function! Tcustom(file)
 	exe 'edit '.a:file
+	:g/^\s*$/d
 	:%s/$/÷\r/
 	exe 'normal ggO" custom file: '.a:file.' "'
 	exe ':source '.g:ttcoach_dir.'ttcoach.vim'

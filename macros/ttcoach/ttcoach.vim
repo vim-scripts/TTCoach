@@ -1,9 +1,9 @@
 " Vim plugin for training touch typing.
-" (c) Mikolaj Machowski 2002 
-" Author: Mikolaj Machowski <mikmach@wp.pl>
-" Version: 0.7.1
-" License: GPL v. 2.0 
-" Last Change: czw lis 21 06:00  2002 C
+" (c) Mikolaj Machowski 2002-2003
+" Author: Mikolaj Machowski (mikmach AT wp DOT pl)
+" Version: 0.9
+" License: GPL v. 2.0
+" Last change: czw paz 8 06:00  2003 C
 "  
 " Help: 
 " More in separate doc file: |ttcoach.txt|
@@ -18,37 +18,47 @@
 "			exercise files - into new created macros/ttcoach directory
 "		}}}	
 " Changelog: {{{
-"	From version 0.7
-"   - added <F1> map to show shortcuts
-"   - Slovak exercises	
-"   - limit of lines up to 500 
+"	From version 0.8
+"    - drill: new exercise for Vim Normal mode commands
+"    - name of layout, exercise and accuracy in statusline
+"    - most important Fx shortcuts in statusline
+"    - add words per minute statistics
+"    - improved handling of small_help window
+"    - automatic highlighting with i,I commands (no need for F4)
+"    - remove blank lines in TTCustom files
+"    - silencing of preparation commands
 " }}}
 " TODO: {{{
-"   - Better interaction with Vim 
-"   - translations of finger files into different layouts 
 "   - Translation of messages?
-" }}} 
+"   - Easier switching between exercises
+"   - Targets for learning: accuracy, speed
+"   - Menus 
+" }}}
 
 " Initialization of variables: {{{
 " Not always necessary but it makes things look clearer ;)
-let s:keys         = "0"
-let s:fault_number = "0"
-let s:timestart    = "0"
-let s:timeend      = "0"
-let g:fault_string = ""
+function! s:ClearVariables() 
+	let s:keys         = 0
+	let s:spacenu      = 0
+	let s:fault_number = 0
+	let s:timestart    = 0
+	let s:timeend      = 0
+	let g:fault_string = ''
+endfunction
+call <SID>ClearVariables()
 " }}}
 " System settings: {{{
 imapclear
 iabclear
-if g:ttcoach_penalty == "0"
-	let g:ttcoach_penalty = "1m"
+if g:ttcoach_penalty == 0
+	let g:ttcoach_penalty = '1m'
 endif
 set hidden
 set noequalalways
 set virtualedit=
 set filetype=
 set tw=0
-if has("gui_running") && g:ttcoach_application_mode != "0"
+if has('gui_running') && g:ttcoach_application_mode != 0
 	set nonumber
 	set scrolloff=1
 	set guioptions-=T
@@ -67,14 +77,35 @@ map <silent> <F6> :TTExplore<cr>
 map <silent> <F7> :call <SID>FlushStatistics()<cr>
 map <silent> <F8> :call <SID>ViewStatistics()<cr>
 map <silent> <F9> :qa!<cr>
-noremap <buffer> <silent> i :call <SID>TimeStart()<cr>i
-noremap <buffer> <silent> I :call <SID>TimeStart()<cr>I
+noremap <buffer> <silent> i :call <SID>HiLetter()<cr>:call <SID>TimeStart()<cr>i
+noremap <buffer> <silent> I :call <SID>HiLetter()<cr>:call <SID>TimeStart()<cr>I
 inoremap <buffer> <silent> <esc> <esc>:call <SID>TimeEnd()<cr>
 inoremap <buffer> <silent> <c-[> <esc>:call <SID>TimeEnd()<cr>
 " }}}
 
+" Set statusline {{{
+set statusline =
+			\Layout:\ %{g:ttcoach_layout}
+			\\ \|\ 
+			\Exercise:\ %t
+			\\ \|\ 
+			\%{Accuracy()}
+			\%<%=%(F1-Help\ F3-Keyboard\ F5-Stats\ F9-Quit%)
+
+function! Accuracy()
+	if s:fault_number == 0
+		let s:accuracy = 100
+	else
+		let gpercent = (s:keys-s:fault_number)*10000/s:keys
+		let s:accuracy = substitute(gpercent, '\(.*\)\(..\)$', '\1.\2', '')
+	endif
+	return 'Accuracy: '.s:accuracy.'%'
+endfunction
+
+" }}}
+ 
 " Let's do imaps in keyboard rows: {{{
-" First row {{{
+" First row  {{{
 imap <buffer> <silent> ~ ~<c-o>:call CompareKeys()<cr>
 imap <buffer> <silent> ` `<c-o>:call CompareKeys()<cr>
 
@@ -117,7 +148,7 @@ imap <buffer> <silent> = =<c-o>:call CompareKeys()<cr>
 imap <buffer> <silent> <Bar> <Bar><c-o>:call CompareKeys()<cr>
 imap <buffer> <silent> \ \<c-o>:call CompareKeys()<cr>
 " }}}
-" Second Row  {{{
+" Second Row {{{
 imap <buffer> <silent> <Tab> <Tab><c-o>:call CompareKeys()<cr>
 
 imap <buffer> <silent> Q Q<c-o>:call CompareKeys()<cr>
@@ -156,7 +187,7 @@ imap <buffer> <silent> [ [<c-o>:call CompareKeys()<cr>
 imap <buffer> <silent> } }<c-o>:call CompareKeys()<cr>
 imap <buffer> <silent> ] ]<c-o>:call CompareKeys()<cr>
 " }}}
-" Third Row {{{
+" Third Row  {{{
 imap <buffer> <silent> A A<c-o>:call CompareKeys()<cr>
 imap <buffer> <silent> a a<c-o>:call CompareKeys()<cr>
 
@@ -224,14 +255,13 @@ imap <buffer> <silent> ? ?<c-o>:call CompareKeys()<cr>
 imap <buffer> <silent> / /<c-o>:call CompareKeys()<cr>
 " }}}
 
- 
 imap <buffer> <silent> <Space> <Space><c-o>:call CompareKeys()<cr>
 " }}}
 
 " Source files with definitions of different layouts
 exe 'source '.g:ttcoach_dir.'ttc_plug_'.g:ttcoach_layout.'.vim'
 
-function! s:ShortHelp() " {{{
+function! s:ShortHelp()   " {{{
 " Shows help screen
 	exe 'normal :above split '.g:ttcoach_dir.'short_help.vim'."\<cr>11\<C-W>_gg"
 endfunction " }}}
@@ -240,7 +270,9 @@ function! s:PrepareTest() " {{{
 " position
 	if winnr() == 2
 	   only
-    endif	   
+    elseif expand("%") =~ 'short_help'
+		quit
+	endif
 	if winbufnr(2) == -1
 		let underline = 510 - line('$')
 		exe "normal G".underline."o\<esc>G"
@@ -251,11 +283,9 @@ function! s:PrepareTest() " {{{
 	if winbufnr(2) != -1 && winheight(2) != 5
 		exe "normal \<c-w>j5\<c-w>_\<c-w>k"
 	endif
-	exe "normal :silent 2,$v/[]÷]$/s/.*//\<cr>"
+	silent exe "normal :2,$v/[]÷]$/s/.*//\<cr>"
 	normal 3G
-	let s:fault_number = "0"
-	let s:keys = "0"
-	let g:fault_string = ""
+	call <SID>ClearVariables()
 	let first_key = getline(2)[0]
 	call <SID>ColKey(first_key)
 endfunction " }}}
@@ -263,12 +293,12 @@ function! s:NewTest()     " {{{
 " Cleans typed letters and place cursor in start position
 	if winnr() == 2
 	   only
+    elseif expand("%") =~ 'short_help'
+		quit
     endif	   
-	exe "normal :silent 2,$v/[]÷]$/s/.*//\<cr>"
+	silent exe "normal :2,$v/[]÷]$/s/.*//\<cr>"
 	normal! 3G
-	let s:fault_number = "0"
-	let s:keys = "0"
-	let g:fault_string = ""
+	call <SID>ClearVariables()
 	let first_key = getline(2)[0]
 	call <SID>ColKey(first_key)
 endfunction " }}}
@@ -299,12 +329,12 @@ function! CompareKeys()   " {{{
 	elseif col('.') + 1 == strlen(mastercopy)
 		call <SID>ColKey("÷")
 	else
-		exe "sleep ".g:ttcoach_penalty
+		exe 'sleep '.g:ttcoach_penalty
 	endif
 	if s:ul != s:l
 		"set hls
 		"exe "normal /^.*\%#<cr>"
-		exe "sleep ".g:ttcoach_penalty
+		exe 'sleep '.g:ttcoach_penalty
 		"nohl
 		let s:fault_number = s:fault_number + 1
 		let g:fault_string = g:fault_string . s:ul
@@ -325,23 +355,28 @@ function! s:ReturnKey()   " {{{
 endfunction " }}}
 function! s:Statistics()  " {{{
 " Creates statistics
-	if s:fault_number == "0"
-		let s:accuracy = "100"
+	if s:fault_number == 0
+		let s:accuracy = 100
 	else
 		let gpercent = (s:keys-s:fault_number)*10000/s:keys
-		let s:accuracy = substitute(gpercent, "\\(.*\\)\\(..\\)$", "\\1.\\2", "")
+		let s:accuracy = substitute(gpercent, '\(.*\)\(..\)$', '\1.\2', '')
 	endif
 	let s:time = s:timeend - s:timestart
-	let s:speed = s:keys*60/s:time
+	if s:time == 0
+		let s:speed = 0
+	else
+		let s:speed = s:keys*60/s:time
+	endif
     echo "Number of keystrokes:\t".s:keys."\n"
 	echo "Number of faults:\t".s:fault_number."\n"
 	echo "Accuracy:\t\t".s:accuracy."%\n"
 	echo "Time:\t\t\t".s:time."s\n"
 	echo "Characters per minute:\t".s:speed
+	echo "Words per minute:\t".s:spacenu
 	if s:accuracy != 100
-		echo "---- Faults per letter -----"
+		echo '---- Faults per letter -----'
 		let fstring = g:fault_string
-		let s:register = ""
+		let s:register = ''
 		let i = 0
 		while i < s:fault_number
 			if s:register !~ fstring[i]
@@ -368,17 +403,17 @@ function! s:Statistics()  " {{{
 			let regnum = regnum + 1
 		endwhile
 		if g:ttcoach_layout !~ "vim\\|custom\\|finger"
-			echo "---- Faults per finger -----"
-			let s:l_little_faults = "0"
-			let s:l_ring_faults   = "0"
-			let s:l_middle_faults = "0"
-			let s:l_index_faults  = "0"
-			let s:r_index_faults  = "0"
-			let s:r_middle_faults = "0"
-			let s:r_ring_faults   = "0"
-			let s:r_little_faults = "0"
-			let s:thumb_faults = "0"
-			let regnum = "0"
+			echo '---- Faults per finger -----'
+			let s:l_little_faults = 0
+			let s:l_ring_faults   = 0
+			let s:l_middle_faults = 0
+			let s:l_index_faults  = 0
+			let s:r_index_faults  = 0
+			let s:r_middle_faults = 0
+			let s:r_ring_faults   = 0
+			let s:r_little_faults = 0
+			let s:thumb_faults = 0
+			let regnum = 0
 			while regnum < s:reglen
 				if g:l_little_keys =~ s:register[regnum]
 					let s:l_little_faults = s:l_little_faults + s:fault{regnum}
@@ -415,18 +450,18 @@ function! s:Statistics()  " {{{
 endfunction " }}}
 function! s:ViewStatistics() " {{{
 " Obvious
-if !exists("s:register")
-	echomsg "You didn't create statistics for this session. Press <F5>"
+if !exists('s:register')
+	echomsg 'You did not create statistics for this session. Press <F5>'
 else
-	exe "view ".s:stats_file
+	exe 'view '.s:stats_file
 	silent only
 	normal G
 endif
 endfunction " }}}
 function! s:FlushStatistics() " {{{
 " Writes statistics to stats.dat
-if !exists("s:register")
-	echomsg "You didn't create statistics for this session. Press <F5>"
+if !exists('s:register')
+	echomsg 'You did not create statistics for this session. Press <F5>'
 else
 	let s:stats_file = g:ttcoach_dir.'/'.g:ttcoach_exe_dir.'/stats.dat'
 	let g:stats_file = s:stats_file
@@ -437,6 +472,7 @@ else
 	exe 'silent !echo "Accuracy: '.s:accuracy.'\%" >> '.s:stats_file
 	exe 'silent !echo "Time: '.s:time.' s" >> '.s:stats_file
 	exe 'silent !echo "Characters per minute: '.s:speed.'" >> '.s:stats_file
+	exe 'silent !echo "Words per minute: '.s:spacenu.'" >> '.s:stats_file
 	if s:accuracy != 100
 		exe 'silent !echo "---- Faults per letter -----" >> '.s:stats_file
 		let regnum = 0
@@ -463,7 +499,7 @@ endfunction " }}}
 function! s:StatsPercent(percent) " {{{
 " Turns numbers into percents
 	let percent = (a:percent*100)/s:fault_number
-	"let percent = substitute(percent, "\\(.*\\)\\(..\\)$", "\\1.\\2", "")
+	"let percent = substitute(percent, '\(.*\)\(..\)$', '\1.\2', '')
 	return percent
 endfunction " }}}
 function! s:ColKey(current_key) " {{{
@@ -475,10 +511,14 @@ function! s:ColKey(current_key) " {{{
 
 	let curr_key = ExtLayout(a:current_key)
 
+	if curr_key =~ 'space' || curr_key =~ 'CR'
+		let s:spacenu = s:spacenu + 1
+	endif
+
 	if exists("curr_key")
 		exe "syntax match ttCurrent /\\[".curr_key."\\]/"
 	else
-		echomsg "End of exercise. Press <F5> to get statistics."
+		echomsg 'End of exercise. Press <F5> to get statistics.'
 	endif
 endfunction " }}}
 
