@@ -2,8 +2,10 @@
 " File: Polish keys for TTCoach
 " Last Change: wto lis 12 12:00  2002 C
  
+scriptencoding iso-8859-2
 " Function returns key for highlighting
 function! ExtLayout(current_key) 
+	let g:ck = a:current_key
 	" English layout {{{
 	if a:current_key =~ "[a-z0-9`;',=-]"
 	   let curr_key = a:current_key
@@ -116,3 +118,5 @@ let g:r_middle_keys = '9(iIkK,<'
 let g:r_ring_keys   = '0)oOlL.>Û”≥£'
 let g:r_little_keys = "pP-_=+\\|[{]};:'\"/?"
 let g:thumb_keys = ' '
+
+" vim:ff=unix:

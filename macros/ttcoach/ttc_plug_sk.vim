@@ -2,6 +2,7 @@
 " File: Slovak keys for TTCoach
 " Last Change: 2002/11/19
  
+scriptencoding iso-8859-2
 " Function returns key for highlighting
 function! ExtLayout(current_key) 
 	" Slovak layout {{{

@@ -3,6 +3,7 @@
 " Last Change: 2002/11/19
 " (original keymap may be found at http://www.pv2c.sk/free/sk_vimkeymap/)
 
+scriptencoding iso-8859-2
 " Z a Y - ak chcete slovensku qwerty, zakomentujte tieto styri riadky
 inoremap <silent> y z<c-o>:call CompareKeys()<cr>
 inoremap <silent> z y<c-o>:call CompareKeys()<cr>

@@ -2,6 +2,7 @@
 " File: Polish keys for TTCoach
 " Last Change: wto lis 12 10:00  2002 C
  
+scriptencoding iso-8859-2
 " Function returns key for highlighting
 function! ExtLayout(current_key) 
 	" Polish layout {{{

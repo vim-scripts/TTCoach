@@ -12,6 +12,7 @@ endif
 let loaded_ttcoach = 1
 let s:save_cpo = &cpo
 set cpo&vim
+scriptencoding iso-8859-2
 
 " Keyboard layout. For now valid are: en, de, fr, pl, sk. Obligatory.
 if !exists("g:ttcoach_layout") 
@@ -124,12 +125,12 @@ function! Tcustom(file)
 	let g:ttcoach_exe_dir = "custom"
 	let g:ttc_is_custom = 1
 	let g:ttc_custom_file = a:file
+	exe ':source '.g:ttcoach_dir.'ttcoach.vim'
 	:g/^\s*$/d
 	:%s/$/÷\r/
 	:%s/^\s*//g
 	:%s/\s*$//g
 	exe 'normal! ggO" custom file: '.a:file.' "'
-	exe ':source '.g:ttcoach_dir.'ttcoach.vim'
 endfunction
 
 " }}}

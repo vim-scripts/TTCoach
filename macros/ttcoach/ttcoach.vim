@@ -38,6 +38,8 @@
 "    - Make goals working only after some number of keys
 " }}}
 
+scriptencoding iso-8859-2
+" 
 " Initialization of variables: {{{
 " Not always necessary but it makes things look clearer ;)
 function! ClearVariables() 
@@ -62,6 +64,7 @@ set virtualedit=
 set filetype=
 set tw=0
 set laststatus=2
+
 " Indentation ...
 set indentkeys=
 set cinkeys=
@@ -363,6 +366,7 @@ function! ColKey(current_key)
 	syntax clear ttDead
 	syntax clear ttDouble
 
+	let g:tck = a:current_key
 	let curr_key = ExtLayout(a:current_key)
 
 	if curr_key =~ 'space' || curr_key =~ 'CR'
@@ -390,18 +394,25 @@ function! CompareKeys()
 	let s:ul = mastercopy[currcol - 1]
 	let s:l = getline('.')[currcol - 1]
 	let current_key = mastercopy[currcol]
-	if col('.') + 1 < strlen(mastercopy)
-		call ColKey(current_key)
-	elseif col('.') + 1 == strlen(mastercopy)
-		call ColKey("÷")
+	if &encoding =~ 'utf-8'
+		if col('.') + 2 < strlen(mastercopy)
+			call ColKey(current_key)
+		elseif col('.') + 2 == strlen(mastercopy)
+			call ColKey("÷")
+		else
+			exe 'sleep '.g:ttcoach_penalty
+		endif
 	else
-		exe 'sleep '.g:ttcoach_penalty
+		if col('.') + 1 < strlen(mastercopy)
+			call ColKey(current_key)
+		elseif col('.') + 1 == strlen(mastercopy)
+			call ColKey("÷")
+		else
+			exe 'sleep '.g:ttcoach_penalty
+		endif
 	endif
+
 	if s:ul != s:l
-		"set hls
-		"exe "normal! /^.*\%#<cr>"
-		exe 'sleep '.g:ttcoach_penalty
-		"nohl
 		exe 'syntax match Error /\%'.line('.').'l\%'.col('.').'c./'
 		let s:fault_number = s:fault_number + 1
 		let g:fault_string = g:fault_string . s:ul
@@ -414,14 +425,26 @@ function! CompareKeys()
 endfunction " }}}
 " ReturnKey: Reaction for <cr>. {{{
 function! ReturnKey()
-	if getline(line('.')-1)[col('.')] == '÷' 
-		normal! 2j|
-		let mastercopy = getline(line('.') - 1)
-		let currcol = col('.')
-		let ret_key = mastercopy[currcol - 1]
-		call ColKey(ret_key)
+	if &encoding !~ 'utf-8'
+		if getline(line('.')-1)[col('.')] == '÷' 
+			normal! 2j|
+			let mastercopy = getline(line('.') - 1)
+			let currcol = col('.')
+			let ret_key = mastercopy[currcol - 1]
+			call ColKey(ret_key)
+		else
+			exe 'sleep '.g:ttcoach_penalty
+		endif
 	else
-		exe 'sleep '.g:ttcoach_penalty
+		if strlen(getline(line('.')-1)) == strlen(getline(line('.'))) + 2
+			normal! 2j|
+			let mastercopy = getline(line('.') - 1)
+			let currcol = col('.')
+			let ret_key = mastercopy[currcol - 1]
+			call ColKey(ret_key)
+		else
+			exe 'sleep '.g:ttcoach_penalty
+		endif
 	endif
 endfunction " }}}
 " ViewStatistics: Show statistics {{{
